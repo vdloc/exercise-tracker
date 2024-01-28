@@ -1,4 +1,5 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const mongoose = require('mongoose');
 const uri = process.env.DB_URI || '';
 const pingTable = process.env.PING_TABLE || 'exercise';
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -13,8 +14,8 @@ module.exports = {
   client,
   async connect(onConnect, onError) {
     try {
-      // Connect the client to the server	(optional starting in v4.7)
-      await client.connect();
+      await mongoose.connect(uri);
+
       // Send a ping to confirm a successful connection
       await client.db(pingTable).command({ ping: 1 });
       console.log(
