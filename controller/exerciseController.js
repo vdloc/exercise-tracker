@@ -1,12 +1,11 @@
 const { Exercise } = require('../model/Exercise');
 const { User } = require('../model/User');
-const { getLocaleDateString } = require('../util/time');
+const { getLocaleDateString, isValidDate } = require('../util/time');
 
 const createExercise = async (req, res) => {
   let { description, duration, date } = req.body;
   const userId = req.params._id;
-  const validDate =
-    new Date(date) !== 'Invalid Date' ? new Date(date) : new Date();
+  const validDate = isValidDate(date) ? new Date(date) : new Date();
   const dateString = getLocaleDateString(validDate);
   const durationNumber = Number(duration);
 
