@@ -35,6 +35,7 @@ const getAllUserLogs = async (req, res) => {
     });
     const logs = {
       username: user.username,
+      _id: userId,
       count: exercises.length,
       log: exercises,
     };
