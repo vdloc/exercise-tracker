@@ -42,9 +42,9 @@ const getAllUserLogs = async (req, res) => {
 
     res.send(logs);
   } catch (err) {
-    console.log(err);
+    res.writeHead(400, 'Custom Status Text', { 'Content-Type': 'text/plain' });
 
-    res.status(400).send(err);
+    res.status(400).send(err.toString());
   }
 };
 
