@@ -27,6 +27,10 @@ const getAllUserLogs = async (req, res) => {
 
     const exercises = await exercisesQuery;
     exercises.forEach((exercise) => {
+      delete exercise.userId;
+      delete exercise.username;
+      delete exercise._id;
+      delete exercise.__v;
       exercise.date = getLocaleDateString(exercise.date);
     });
     const logs = {
