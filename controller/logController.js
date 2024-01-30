@@ -22,10 +22,13 @@ const getAllUserLogs = async (req, res) => {
       isValidDate(to) && (query.date['$lte'] = new Date(to));
     }
 
-    exercisesQuery = Exercise.find(query);
-    limit && exercisesQuery.limit(limit);
+    exercisesQuery = Exercise.find(query).lean();
+    limit && exercisesQuery.limit(Number(limit));
 
     const exercises = await exercisesQuery;
+    exercises.forEach((exercise) => {
+      exercise.date = getLocaleDateString(exercise.date);
+    });
     const logs = {
       username: user.username,
       count: exercises.length,
