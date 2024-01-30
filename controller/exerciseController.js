@@ -3,20 +3,19 @@ const { User } = require('../model/User');
 const { getLocaleDateString } = require('../util/time');
 
 const createExercise = async (req, res) => {
-  const { description, duration, date } = req.body;
+  let { description, duration, date } = req.body;
   const userId = req.params._id;
-
   const validDate =
     new Date(date) !== 'Invalid Date' ? new Date(date) : new Date();
   const dateString = getLocaleDateString(validDate);
-  console.log(dateString);
+  const durationNumber = Number(duration);
 
   try {
     const user = await User.findById(userId);
     const exercise = new Exercise({
       description,
-      duration,
-      date: dateString,
+      duration: durationNumber,
+      date: validDate,
       username: user.username,
       userId: user._id,
     });
@@ -25,7 +24,7 @@ const createExercise = async (req, res) => {
       username: user.username,
       _id: user._id,
       description,
-      duration,
+      duration: durationNumber,
       date: dateString,
     });
   } catch (error) {

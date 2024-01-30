@@ -1,5 +1,5 @@
 function getLocaleDateString(date) {
-  return new Date()
+  return new Date(date)
     .toLocaleDateString('en-US', {
       weekday: 'short',
       year: 'numeric',
@@ -9,4 +9,8 @@ function getLocaleDateString(date) {
     .replaceAll(',', '');
 }
 
-module.exports = { getLocaleDateString };
+function isValidDate(dateString = '') {
+  return dateString && new Date(dateString) !== 'Invalid Date';
+}
+
+module.exports = { getLocaleDateString, isValidDate };

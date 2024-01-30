@@ -1,20 +1,29 @@
+const mongoose = require('mongoose');
 const { Log } = require('../model/Log');
 const { Exercise } = require('../model/Exercise');
 const { User } = require('../model/User');
+const { isValidDate, getLocaleDateString } = require('../util/time');
 
 const getAllUserLogs = async (req, res) => {
   try {
     const userId = req.params._id;
-    const { limit, from, to } = req.query;
+    let { limit, from, to } = req.query;
 
-    const users = await User.find({ _id: userId });
-    const user = users[0];
+    const user = await User.findById({ _id: userId });
+    let exercisesQuery;
 
-    const exercisesQuery = Exercise.find({ userId });
+    let query = {
+      userId,
+    };
 
+    if (isValidDate(from) || isValidDate(to)) {
+      query.date = {};
+      isValidDate(from) && (query.date['$gte'] = new Date(from));
+      isValidDate(to) && (query.date['$lte'] = new Date(to));
+    }
+
+    exercisesQuery = Exercise.find(query);
     limit && exercisesQuery.limit(limit);
-    from && exercisesQuery.where('date').gte(from);
-    to && exercisesQuery.where('date').lte(to);
 
     const exercises = await exercisesQuery;
     const logs = {
@@ -22,10 +31,11 @@ const getAllUserLogs = async (req, res) => {
       count: exercises.length,
       log: exercises,
     };
-    console.log(logs);
 
     res.send(logs);
   } catch (err) {
+    console.log(err);
+
     res.status(400).send(err);
   }
 };
